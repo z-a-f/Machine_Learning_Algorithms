@@ -5,8 +5,8 @@ I will put all classifiers and other machine learning algorithms I work on here.
 ## Released
 
 - [Adaptive Classifier](adaptive-classifier)
--
+
 
 ## Work in progress
-- [FoG (not published)](#)
--
+- FoG (not published)
+
