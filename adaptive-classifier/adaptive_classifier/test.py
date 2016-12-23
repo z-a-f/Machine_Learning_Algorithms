@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Ignore that file for now
+"""
+
 import pickle
 
 with open('file.pickle', 'r') as f:
