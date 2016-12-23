@@ -23,3 +23,11 @@ $ ./adaptivec.py
 - Utilization support for other classifiers
 - Demo needs to be more visual
 - Reporting of the scores
+
+
+## Collaborators
+
+- Marcia S. Louis
+- Joseph Wang
+- Venkatesh Saligrama
+- Ajay Joshi
