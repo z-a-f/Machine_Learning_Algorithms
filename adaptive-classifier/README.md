@@ -21,3 +21,5 @@ $ ./adaptivec.py
 ## TODO:
 
 - Utilization support for other classifiers
+- Demo needs to be more visual
+- Reporting of the scores
