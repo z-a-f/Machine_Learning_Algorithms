@@ -12,3 +12,4 @@ Sorry, cannot release unpublished work
 - FoG: highly distributed, resource allocation aware, energy-efficient classifier (publication scheduled)
 - Bernoulli RBM Dream Machine: Video processing machine that dreams (not published)
 - Seeing Machine: Convolutional Visual Cortex with RBM Decision Making (not published)
+- Global Mind: Open-source project like SETI@HOME and Folding@HOME, to allow for global mind to emerge from internet (looking for collaborators)
