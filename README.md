@@ -4,7 +4,7 @@ I will put all machine learning algorithms I work on and develop here. If they a
 
 ## Released
 
-- [Adaptive Classifier](adaptive-classifier)
+- [Adaptive Classifier](adaptive-classifier) -- Test time, feature budgeted classifier
 
 
 ## Work in progress
