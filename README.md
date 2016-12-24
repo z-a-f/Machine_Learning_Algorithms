@@ -1,6 +1,6 @@
-# Classifiers
+# Machine Learning Algorithms
 
-I will put all classifiers and other machine learning algorithms I work on here. If they are complete, I will say so in the list below.
+I will put all machine learning algorithms I work on and develop here. If they are complete, I will say so in the list below.
 
 ## Released
 
