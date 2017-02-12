@@ -18,11 +18,11 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
         """
         cls format: [(cls0, cost0), (cls1, cost1), ...], where cost is 1/accuracy, energy, delay (anything that is 'the smaller - the better')
         """
-        
+
         self.budget = budget
         self.chooser = chooser
         self.classifiers = cls
-        
+
         if self.chooser is None:
             self.chooser = svm.SVC(kernel='linear', C = 1., decision_function_shape='ovr', verbose = True, class_weight = 'balanced')
         if self.classifiers is None:
@@ -35,11 +35,11 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
         if not isinstance(self.chooser, (svm.LinearSVC, linear_model.LinearRegression)):
             # raise RuntimeWarning('The change in utilization is only supported in LinearSVC. That might change in the future')
             warnings.warn('The change in utilization is only supported in LinearSVC or LinearRegression. That might change in the future')
-            
+
         ## Not very efficient, creates copies -- hopefully not a lot of classifiers:
         self.classifiers = sorted(self.classifiers, key = lambda x: x[1]) # Sort by cost!
 
-        
+
 
         self._chooser_order = len(self.classifiers)
         # TODO: Make sure to check the datatypes for the inputs
@@ -54,8 +54,8 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
 
     def fit(self, X, y, cross_val = None, budget = None):
         ## TODO: Currently, cross_val is of the form (X, y), where cross_val[0] = X,
-        ## cross_val[1] = y. This needs to be changed and standardized 
-        
+        ## cross_val[1] = y. This needs to be changed and standardized
+
         ## Step 1: Fit all the classifiers
         for idx in xrange(self._chooser_order):
             print "Training", idx
@@ -77,7 +77,7 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
         # import pickle
         # with open('file.pickle', 'w') as f:
         #     pickle.dump([cross_val[0], l], f)
-        
+
         self.chooser.fit(cross_val[0], l)
         print self.chooser.classes_
         # print self.chooser.score(cross_val[0], cross_val[1])
@@ -92,9 +92,9 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
             result[idx] = self.classifiers[idx][0]._predict_proba(X)
         # return np.choose(chosen.astype(int), result)
         res = np.array([ result[int(chs)][idx] for idx, chs in enumerate(chosen) ])
-        
+
         return res
-        
+
     def predict(self, X):
         return np.array(map(np.argmax, self._predict_proba(X)))
 
@@ -104,21 +104,21 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
         res = np.zeros(self._chooser_order)
         for el in chosen:
             res[int(el)] += 1
-            
+
         # print _, repeats
         return res / len(X)
 
     def bias(self, b):
         ## See  http://scikit-learn.org/stable/modules/svm.html#svc
         pass
-    
+
 if __name__ == '__main__':
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import StandardScaler
     from sklearn.datasets import make_moons, make_circles, make_classification
 
     # X, y = make_moons(n_samples = 1000, noise = 0.1)
-    X, y = make_classification(n_samples = 100000, n_features=2, n_redundant=0, n_informative=2,
+    X, y = make_classification(n_samples = 1000, n_features=2, n_redundant=0, n_informative=2,
                            random_state=0, n_clusters_per_class=1)
     rng = np.random.RandomState(2)
     X += 2 * rng.uniform(size=X.shape)
@@ -131,10 +131,10 @@ if __name__ == '__main__':
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
-    
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .5)
     X_xval, X_test, y_xval, y_test = train_test_split(X_test, y_test, test_size = .4)
-    
+
     #print np.shape(X_train), np.shape(y_train)
     #print np.shape(y_train)
     ac = AdaptiveC(chooser = svm.SVC(kernel='linear'))
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     # print np.shape(X_test)
     X_print = X_train
     y_print = y_train
-    
+
     # print ac.score(X_print, y_print)
     # print ac.classifiers[0][0].score(X_print, y_print)
     # print ac.classifiers[1][0].score(X_print, y_print)
@@ -178,13 +178,13 @@ if __name__ == '__main__':
         # point in the mesh [x_min, x_max]x[y_min, y_max].
         plt.subplot(3, 2, i + 1)
         plt.subplots_adjust(wspace=0.4, hspace=0.4)
-        
+
         Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-        
+
         # Put the result into a color plot
         Z = Z.reshape(xx.shape)
         plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
-        
+
         # Plot also the training points
         plt.scatter(X_print[:, 0], X_print[:, 1], c=y_print, cmap=plt.cm.Paired)
         plt.xlabel('Sepal length')
@@ -203,13 +203,13 @@ if __name__ == '__main__':
     # point in the mesh [x_min, x_max]x[y_min, y_max].
     plt.subplot(3, 2, i + 2)
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
-    
+
     Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-    
+
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
     plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
-    
+
     # Plot also the training points
     plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Paired)
     # plt.xlabel('Sepal length')
@@ -219,5 +219,5 @@ if __name__ == '__main__':
     plt.xticks(())
     plt.yticks(())
     plt.title('choose')
-    
+
     plt.show()
