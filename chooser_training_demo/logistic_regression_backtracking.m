@@ -26,10 +26,13 @@ alpha=zeros(1,size(xtrain,1));
 for it=1:1:max_it
     
     L=sum(log(1+exp(-ytrain.*(alpha*xtrain))));
-    L(isnan(L))=-ytrain(1,isnan(L)).*(alpha*xtrain(:,isnan(L)));
+    % L(isnan(L))=-ytrain(1,isnan(L)).*(alpha*xtrain(:,isnan(L)));
     
     
-    dL=xtrain*(-w.*ytrain./(1+exp(ytrain.*(alpha*xtrain))))';
+    dL=xtrain*
+        (-w.*ytrain ./ 
+        (1+exp(ytrain.*(alpha*xtrain)))
+    )';
     dL2weight=w./(2+exp(ytrain.*(alpha*xtrain))+exp(-ytrain.*(alpha*xtrain)));
     dL2=(xtrain.*repmat(dL2weight,size(xtrain,1),1))*(xtrain');
     grad_dir=-pinv(dL2)*dL;
@@ -42,8 +45,11 @@ for it=1:1:max_it
     b=.9;
     crit_fac=a*dL'*grad_dir;
     temp_loss=log(1+exp(-ytrain.*((alpha+t*grad_dir')*xtrain)));
-    temp_loss(isnan(temp_loss))=-ytrain(1,isnan(temp_loss)).*((alpha+t*grad_dir')*xtrain(:,isnan(temp_loss)));
-    while sum(temp_loss)>(L+t*crit_fac) && backtrack_counter<50
+    % temp_loss(isnan(temp_loss))=-ytrain(1,isnan(temp_loss)).*((alpha+t*grad_dir')*xtrain(:,isnan(temp_loss)));
+    while sum(temp_loss)>(L+t*crit_fac)
+        if backtrack_counter>=50
+            break
+        end
         t=b*t;
         temp_loss=log(1+exp(-ytrain.*((alpha+t*grad_dir')*xtrain)));
         temp_loss(isnan(temp_loss))=-ytrain(1,isnan(temp_loss)).*((alpha+t*grad_dir')*xtrain(:,isnan(temp_loss)));

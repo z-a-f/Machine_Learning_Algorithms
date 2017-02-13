@@ -60,7 +60,7 @@ class AdaptiveC(BaseSVC): # BaseSVC might be a base class, but if something funk
         for idx in xrange(self._chooser_order):
             print "Training", idx
             self.classifiers[idx][0].fit(X, y)
-        ## Create all the pseudo-labels to fit the chooser functionvi
+        ## Create all the pseudo-labels to fit the chooser function
         if cross_val is None:
             cross_val = (X, y)
         y_hats = [cls[0].predict(cross_val[0]) for cls in self.classifiers]
