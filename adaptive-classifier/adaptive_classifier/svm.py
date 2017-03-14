@@ -1,10 +1,12 @@
 import cvxopt
+# import numpy as np
 
 class SVMTrainer(object):
   def __init__(self, kernel, c):
     self._kernel = kernel
     self._c = c
-
+    self._MIN_SUPPORT_VECTOR_MULTIPLIER = 1e-6
+    
   def train(self, X, y):
     """Given the training features X with labels y, returns a SVM
     predictor representing the trained SVM.
@@ -23,7 +25,7 @@ class SVMTrainer(object):
 
   def _construct_predictor(self, X, y, lagrange_multipliers):
     support_vector_indices = \
-      lagrange_multipliers > MIN_SUPPORT_VECTOR_MULTIPLIER
+      lagrange_multipliers > self._MIN_SUPPORT_VECTOR_MULTIPLIER
 
     support_multipliers = lagrange_multipliers[support_vector_indices]
     support_vectors = X[support_vector_indices]
@@ -108,3 +110,5 @@ class SVMPredictor(object):
                  self._support_vector_labels):
       result += z_i * y_i * self._kernel(x_i, x)
     return np.sign(result).item()
+
+

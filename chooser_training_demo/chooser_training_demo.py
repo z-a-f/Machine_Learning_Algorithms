@@ -215,54 +215,55 @@ test_error=np.hstack((np.mean(yhatp_test!=ytest), test_error))
 test_cost=np.hstack((1, test_cost))
 # print np.sum(yhat_test!=ytest)
 
-plt.plot(1.-tradeoffs,test_error[1:]) # xlim([0 1]);xlabel('Fraction of Test Examples using Poly');ylabel('Test Error');
-plt.xlim([0, 1])
-plt.xlabel('Battery Level')
-plt.ylabel('Test Error')
-plt.title('Penbase (linspace: %.2f - %.2f)'%(1-high, 1-low))
-plt.show()
+# plt.plot(1.-tradeoffs,test_error[1:]) # xlim([0 1]);xlabel('Fraction of Test Examples using Poly');ylabel('Test Error');
+# plt.xlim([0, 1])
+# plt.xlabel('Battery Level')
+# plt.ylabel('Test Error')
+# plt.title('Penbase (linspace: %.2f - %.2f)'%(1-high, 1-low))
+# plt.show()
 # print "Test Error:", test_error
 # print np.sum(yhatp_test)
 
 ###
-# # Change in battery life
-# battery = np.hstack((
-#   [1.]*5,
-#   np.linspace(1., .4, 10),
-#   [.4]*2,
-#   np.linspace(.4, .1, 4),
-#   [.1]*2,
-#   np.linspace(.1, .9, 8),
-#   [.9]*3
-# ))
+# Change in battery life
+battery = np.hstack((
+  [1.]*5,
+  np.linspace(1., .4, 10),
+  [.4]*2,
+  np.linspace(.4, .1, 4),
+  [.1]*2,
+  np.linspace(.1, .9, 8),
+  [.9]*3
+))
 
-# test_error = np.ones(len(battery))
-# test_cost= np.zeros(len(battery))
+test_error = np.ones(len(battery))
+test_cost= np.zeros(len(battery))
 
-# for k in xrange(len(battery)):
-#   temp_labels = np.sign(np.dot(chooser[:-1], xtest)+np.dot(chooser[-1],battery[k])+chooser_offset)
-#   # print np.sum(temp_labels)
-#   test_cost[k] = np.mean(temp_labels==1)
-#   yhat_test = np.array(yhatl_test) # Deep copy
-#   yhat_test.T[temp_labels==1]=yhatp_test.T[temp_labels==1]
-#   test_error[k]=np.mean(yhat_test!=ytest)
-#   # print yhat_test.shape, temp_labels.shape
-
-
-# plt.plot(test_cost,test_error) # xlim([0 1]);xlabel('Fraction of Test Examples using Poly');ylabel('Test Error');
-# plt.xlim([0, 1])
-# plt.xlabel('Fraction of Test Examples using Poly')
-# plt.ylabel('Test Error')
-# plt.grid()
-
-# # ax2 = ax1.twinx()
-# # ax2.plot(range(len(battery)),test_error, label='Test Error')
-# # ax2.plot(range(len(battery)),test_cost, label='Poly Usage')
-# # ax2.set_ylabel('Ratio')
-# # ax2.legend()
+for k in xrange(len(battery)):
+  temp_labels = np.sign(np.dot(chooser[:-1], xtest)+np.dot(chooser[-1],battery[k])+chooser_offset)
+  # print np.sum(temp_labels)
+  test_cost[k] = np.mean(temp_labels==1)
+  yhat_test = np.array(yhatl_test) # Deep copy
+  yhat_test.T[temp_labels==1]=yhatp_test.T[temp_labels==1]
+  test_error[k]=np.mean(yhat_test!=ytest)
+  # print yhat_test.shape, temp_labels.shape
 
 
-# plt.tight_layout()
-# plt.show()
-# # print "Test Error:", test_error
-# # print np.sum(yhatp_test)
+fig, ax1 = plt.subplots()
+ax1.plot(range(len(battery)),battery) 
+
+ax1.set_xlabel('Time')
+ax1.set_ylabel('Battery Level')
+ax1.grid()
+
+ax2 = ax1.twinx()
+ax2.plot(range(len(battery)),max(test_error) - test_error, 'r', label='Test Error')
+ax2.plot(range(len(battery)),max(test_cost)-test_cost, 'g', label='HARD Usage')
+ax2.set_ylabel('Ratio')
+ax2.legend()
+
+
+plt.tight_layout()
+plt.show()
+# print "Test Error:", test_error
+# print np.sum(yhatp_test)
